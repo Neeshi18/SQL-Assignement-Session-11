@@ -1,0 +1,60 @@
+Use food_delivery_db;
+SELECT
+    name,
+    rating
+FROM Restaurants
+WHERE rating >
+(
+    SELECT AVG(rating)
+    FROM Restaurants
+);
+ALTER TABLE Products
+ADD price DECIMAL(10,2);
+UPDATE Products SET price = 55000 WHERE id = 1;
+UPDATE Products SET price = 800 WHERE id = 2;
+UPDATE Products SET price = 25000 WHERE id = 3;
+UPDATE Products SET price = 1500 WHERE id = 4;
+UPDATE Products SET price = 700 WHERE id = 5;
+SELECT
+    p.name,
+    p.price,
+    p.category,
+    (
+        SELECT AVG(price)
+        FROM Products
+        WHERE category = p.category
+    ) AS Avg_Category_Price
+FROM Products p;
+Use music_streaming_db;
+SELECT
+    u.name,
+    p.playlist_count
+FROM Users u
+JOIN
+(
+    SELECT
+        user_id,
+        COUNT(*) AS playlist_count
+    FROM Playlist
+    GROUP BY user_id
+) p
+ON u.id = p.user_id
+WHERE p.playlist_count >
+(
+    SELECT AVG(playlist_count)
+    FROM
+    (
+        SELECT COUNT(*) AS playlist_count
+        FROM Playlist
+        GROUP BY user_id
+    ) AS avg_playlist
+);
+Use food_delivery_db;
+SELECT DISTINCT
+    user_id
+FROM Orders
+WHERE amount >
+(
+    SELECT AVG(amount)
+    FROM Orders
+);
